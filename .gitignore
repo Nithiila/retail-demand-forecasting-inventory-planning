@@ -1,1 +1,19 @@
 
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+node_modules/
+frontend/dist/
+.env
+*.log
+*.tmp
+data/processed/
+outputs/
+models/*.pkl
+*.ipynb_checkpoints/
+*.md
+!README.md

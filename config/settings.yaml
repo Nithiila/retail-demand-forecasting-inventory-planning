@@ -1,0 +1,17 @@
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  outputs_dir: outputs
+  sales_file: sales.csv
+  products_file: products.csv
+  stores_file: stores.csv
+  inventory_file: inventory.csv
+
+random_seed: 42
+forecast:
+  horizon_weeks: 4
+inventory:
+  service_level: 0.95
+validation:
+  window_weeks: 4
+  minimum_history_weeks: 12
