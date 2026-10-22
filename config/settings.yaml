@@ -13,5 +13,5 @@ forecast:
 inventory:
   service_level: 0.95
 validation:
-  window_weeks: 4
+  window_weeks: 8
   minimum_history_weeks: 12
