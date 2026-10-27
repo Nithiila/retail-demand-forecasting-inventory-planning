@@ -15,3 +15,6 @@ inventory:
 validation:
   window_weeks: 8
   minimum_history_weeks: 12
+model_selection:
+  selected_model: moving_average
+  selection_metric: rmse
