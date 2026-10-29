@@ -35,16 +35,18 @@ CREATE TABLE IF NOT EXISTS inventory (
 );
 
 CREATE TABLE IF NOT EXISTS forecasts (
-    forecast_date DATE NOT NULL,
+    target_week DATE NOT NULL,
     generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     store_id VARCHAR(32) NOT NULL REFERENCES stores(store_id),
     product_id VARCHAR(32) NOT NULL REFERENCES products(product_id),
     horizon_week SMALLINT NOT NULL CHECK (horizon_week BETWEEN 1 AND 52),
-    predicted_units NUMERIC(14, 3) NOT NULL CHECK (predicted_units >= 0),
+    predicted_demand NUMERIC(14, 3) NOT NULL CHECK (predicted_demand >= 0),
     lower_bound NUMERIC(14, 3) CHECK (lower_bound >= 0),
     upper_bound NUMERIC(14, 3) CHECK (upper_bound >= 0 AND (lower_bound IS NULL OR upper_bound >= lower_bound)),
     model_name VARCHAR(100) NOT NULL,
-    PRIMARY KEY (forecast_date, store_id, product_id, model_name)
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    PRIMARY KEY (target_week, store_id, product_id, model_name),
+    CONSTRAINT forecasts_product_store_week_model_unique UNIQUE (product_id, store_id, target_week, model_name)
 );
 
 CREATE INDEX IF NOT EXISTS idx_sales_product_date ON sales(product_id, sale_date);
