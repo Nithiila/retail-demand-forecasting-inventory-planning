@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS inventory (
     product_id VARCHAR(32) NOT NULL REFERENCES products(product_id),
     stock_quantity INTEGER NOT NULL CHECK (stock_quantity >= 0),
     reorder_point INTEGER NOT NULL CHECK (reorder_point >= 0),
+    lead_time_days INTEGER NOT NULL CHECK (lead_time_days >= 0),
     unit_cost NUMERIC(12, 2) NOT NULL CHECK (unit_cost >= 0),
     PRIMARY KEY (snapshot_date, store_id, product_id)
 );
