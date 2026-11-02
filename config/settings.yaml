@@ -12,6 +12,10 @@ forecast:
   horizon_weeks: 4
 inventory:
   service_level: 0.95
+  risk:
+    critical_coverage_weeks: 0.5
+    warning_coverage_weeks: 1.0
+    excess_coverage_weeks: 8.0
 validation:
   window_weeks: 8
   minimum_history_weeks: 12
