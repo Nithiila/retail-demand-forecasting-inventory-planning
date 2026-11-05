@@ -28,3 +28,8 @@ def test_pagination_validation_is_database_independent():
         pass
     else:
         raise AssertionError("invalid pagination accepted")
+
+
+def test_inventory_risk_parameter_validation_is_database_independent():
+    response = client.get("/api/v1/inventory/risks", params={"risk_level": "unknown"})
+    assert response.status_code == 422
