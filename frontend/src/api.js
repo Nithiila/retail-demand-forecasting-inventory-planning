@@ -9,6 +9,9 @@ export async function fetchJson(path) {
 
 export const api = {
   forecasts: (params = "") => fetchJson(`/forecasts${params}`),
+  demandHistory: (params = "") => fetchJson(`/demand-history${params}`),
+  products: () => fetchJson("/products"),
+  stores: () => fetchJson("/stores"),
   inventory: () => fetchJson("/inventory"),
   risks: () => fetchJson("/inventory/risks"),
   recommendations: () => fetchJson("/inventory/recommendations"),

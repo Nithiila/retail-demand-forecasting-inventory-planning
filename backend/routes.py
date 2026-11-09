@@ -71,6 +71,19 @@ def forecasts(product_id: str | None = None, store_id: str | None = None, date_f
         raise HTTPException(503, "Database unavailable") from exc
 
 
+@router.get("/demand-history")
+def demand_history(product_id: str | None = None, store_id: str | None = None, page: int = Query(1, ge=1), limit: int = Query(50, ge=1, le=200)):
+    clauses, params = [], []
+    if product_id: clauses += ["product_id=%s"]; params += [product_id]
+    if store_id: clauses += ["store_id=%s"]; params += [store_id]
+    where = "WHERE " + " AND ".join(clauses) if clauses else ""
+    try:
+        rows = _list("sales", "date_trunc('week', sale_date)::date AS week_start, product_id, store_id, SUM(units_sold)::integer AS actual_demand", where, params, page, limit)
+        return {"items": rows, "page": page, "limit": limit}
+    except psycopg.Error as exc:
+        raise HTTPException(503, "Database unavailable") from exc
+
+
 def _inventory_analysis() -> pd.DataFrame:
     with psycopg.connect(database_url(), row_factory=dict_row) as conn:
         inv = pd.DataFrame(conn.execute("SELECT store_id, product_id, stock_quantity, reorder_point, lead_time_days FROM inventory").fetchall())
