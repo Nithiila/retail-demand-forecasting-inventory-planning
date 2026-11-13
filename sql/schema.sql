@@ -52,4 +52,4 @@ CREATE TABLE IF NOT EXISTS forecasts (
 
 CREATE INDEX IF NOT EXISTS idx_sales_product_date ON sales(product_id, sale_date);
 CREATE INDEX IF NOT EXISTS idx_sales_store_date ON sales(store_id, sale_date);
-CREATE INDEX IF NOT EXISTS idx_forecasts_date ON forecasts(forecast_date);
+CREATE INDEX IF NOT EXISTS idx_forecasts_date ON forecasts(target_week);
