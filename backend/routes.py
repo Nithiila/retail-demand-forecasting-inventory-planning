@@ -78,7 +78,14 @@ def demand_history(product_id: str | None = None, store_id: str | None = None, p
     if store_id: clauses += ["store_id=%s"]; params += [store_id]
     where = "WHERE " + " AND ".join(clauses) if clauses else ""
     try:
-        rows = _list("sales", "date_trunc('week', sale_date)::date AS week_start, product_id, store_id, SUM(units_sold)::integer AS actual_demand", where, params, page, limit)
+        rows = _list(
+            "sales",
+            "date_trunc('week', sale_date)::date AS week_start, product_id, store_id, SUM(units_sold)::integer AS actual_demand",
+            where + (" GROUP BY date_trunc('week', sale_date)::date, product_id, store_id" if where else "GROUP BY date_trunc('week', sale_date)::date, product_id, store_id"),
+            params,
+            page,
+            limit,
+        )
         return {"items": rows, "page": page, "limit": limit}
     except psycopg.Error as exc:
         raise HTTPException(503, "Database unavailable") from exc
