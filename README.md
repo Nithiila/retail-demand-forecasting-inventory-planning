@@ -24,6 +24,15 @@ docker compose up --build
 
 Services are available at `http://localhost:5173` (frontend), `http://localhost:8000/health` (backend), and PostgreSQL on port `5432`. PostgreSQL data persists in the `postgres_data` Docker volume. Do not use `docker compose down -v`.
 
+The backend API is available under `/api/v1`:
+
+- `GET /products` and `GET /stores` support paginated catalog lookups.
+- `GET /forecasts` and `GET /demand-history` provide filtered weekly demand data.
+- `GET /inventory`, `GET /inventory/risks`, and `GET /inventory/recommendations` provide inventory planning outputs.
+- `POST /forecasts` persists a validated forecast batch using an upsert.
+
+The React dashboard uses `VITE_API_BASE` to select the API base URL; it defaults to `http://localhost:8000/api/v1` for local development.
+
 ## Local setup and tests
 
 ```powershell

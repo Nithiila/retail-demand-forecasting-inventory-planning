@@ -20,7 +20,8 @@ settings = Settings()
 
 def load_project_settings(path: str | Path = "config/settings.yaml") -> dict:
     """Load shared non-secret application settings from YAML."""
-    with Path(path).open(encoding="utf-8") as stream:
+    settings_path = Path(path)
+    with settings_path.open(encoding="utf-8") as stream:
         return yaml.safe_load(stream) or {}
 
 
