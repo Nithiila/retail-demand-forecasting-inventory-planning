@@ -15,12 +15,13 @@ router = APIRouter(prefix="/api/v1")
 
 
 def pagination(page: int = 1, limit: int = 50) -> tuple[int, int]:
+    """Return the SQL offset and bounded page size for a list endpoint."""
     if page < 1 or limit < 1 or limit > 200:
         raise ValueError("page must be >= 1 and limit must be between 1 and 200")
     return (page - 1) * limit, limit
 
 
-def _list(table: str, columns: str, where: str = "", params: list = None, page: int = 1, limit: int = 50):
+def _list(table: str, columns: str, where: str = "", params: list | None = None, page: int = 1, limit: int = 50):
     offset, limit = pagination(page, limit)
     with psycopg.connect(database_url(), row_factory=dict_row) as conn:
         return conn.execute(f"SELECT {columns} FROM {table} {where} ORDER BY 1 LIMIT %s OFFSET %s", (params or []) + [limit, offset]).fetchall()

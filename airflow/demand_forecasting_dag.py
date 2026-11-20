@@ -53,7 +53,12 @@ def inventory_task():
     print("Inventory plan output:", output)
 
 
-default_args = {"owner": "retail-demand", "retries": 2, "retry_delay": timedelta(minutes=2), "on_failure_callback": failure_callback}
+default_args = {
+    "owner": "retail-demand",
+    "retries": 2,
+    "retry_delay": timedelta(minutes=2),
+    "on_failure_callback": failure_callback,
+}
 
 with DAG(dag_id="retail_demand_forecasting", start_date=datetime(2024, 1, 1), schedule=None, catchup=False, default_args=default_args, tags=["retail", "forecasting"]) as dag:
     validate = PythonOperator(task_id="validate_raw_data", python_callable=validate_task)
