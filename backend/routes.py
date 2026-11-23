@@ -135,6 +135,8 @@ def inventory_risks(risk_level: str | None = None, page: int = Query(1, ge=1), l
 def reorder_recommendations(page: int = Query(1, ge=1), limit: int = Query(50, ge=1, le=200)):
     try:
         result = _inventory_analysis()
+        if result.empty:
+            return {"items": [], "page": page, "limit": limit}
         result = result[result.recommended_order_quantity > 0]
         offset, size = pagination(page, limit)
         return {"items": result.iloc[offset:offset + size].to_dict(orient="records"), "page": page, "limit": limit}

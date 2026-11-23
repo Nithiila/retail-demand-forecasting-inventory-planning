@@ -22,7 +22,7 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
-Services are available at `http://localhost:5173` (frontend), `http://localhost:8000/health` (backend), and PostgreSQL on port `5432`. PostgreSQL data persists in the `postgres_data` Docker volume. Do not use `docker compose down -v`.
+With the default local port mapping, services are available at `http://localhost:5174` (frontend), `http://localhost:8001/health` (backend), and PostgreSQL on port `5433`. PostgreSQL data persists in the `postgres_data` Docker volume. Do not use `docker compose down -v`.
 
 The backend API is available under `/api/v1`:
 
