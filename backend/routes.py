@@ -1,6 +1,7 @@
 
 import pandas as pd
 import psycopg
+import logging
 from datetime import date
 from fastapi import APIRouter, HTTPException, Query
 from psycopg.rows import dict_row
@@ -12,12 +13,15 @@ from .inventory_risk import classify_inventory_risk
 from .schemas import ForecastBatch
 
 router = APIRouter(prefix="/api/v1")
+logger = logging.getLogger(__name__)
 
 
 def pagination(page: int = 1, limit: int = 50) -> tuple[int, int]:
     """Return the SQL offset and bounded page size for a list endpoint."""
-    if page < 1 or limit < 1 or limit > 200:
-        raise ValueError("page must be >= 1 and limit must be between 1 and 200")
+    if page < 1:
+        raise ValueError("page must be greater than or equal to 1")
+    if limit < 1 or limit > 200:
+        raise ValueError("limit must be between 1 and 200")
     return (page - 1) * limit, limit
 
 
@@ -36,6 +40,7 @@ def products(product_id: str | None = None, page: int = Query(1, ge=1), limit: i
             raise HTTPException(404, "Unknown product ID")
         return {"items": rows, "page": page, "limit": limit}
     except psycopg.Error as exc:
+        logger.exception("Products query failed")
         raise HTTPException(503, "Database unavailable") from exc
 
 
@@ -93,6 +98,7 @@ def demand_history(product_id: str | None = None, store_id: str | None = None, p
 
 
 def _inventory_analysis() -> pd.DataFrame:
+    """Build the shared inventory plan and risk view used by inventory APIs."""
     with psycopg.connect(database_url(), row_factory=dict_row) as conn:
         inv = pd.DataFrame(conn.execute("SELECT store_id, product_id, stock_quantity, reorder_point, lead_time_days FROM inventory").fetchall())
         fc = pd.DataFrame(conn.execute("SELECT store_id, product_id, target_week AS forecast_date, predicted_demand AS prediction FROM forecasts").fetchall())

@@ -1,6 +1,7 @@
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api/v1";
 
+/** Fetch and decode a JSON response from the configured FastAPI base URL. */
 export async function fetchJson(path) {
   let response;
   try {
